@@ -72,6 +72,15 @@ def show_pokemon(request, pokemon_id):
             "img_url": requested_pokemon.previous_evolution.image.url if requested_pokemon.previous_evolution.image else DEFAULT_IMAGE_URL
         }
     
+    next_evolution_data = None
+    if requested_pokemon.next_evolution.exists():
+        next_evolution = requested_pokemon.next_evolution.first()
+        next_evolution_data = {
+            "title_ru": next_evolution.title,
+            "pokemon_id": next_evolution.id,
+            "img_url": next_evolution.image.url if next_evolution.image else DEFAULT_IMAGE_URL
+        }
+
     pokemon_data = {
         'pokemon_id': requested_pokemon.id,
         'img_url': requested_pokemon.image.url if requested_pokemon.image else DEFAULT_IMAGE_URL,
@@ -79,7 +88,8 @@ def show_pokemon(request, pokemon_id):
         'description': requested_pokemon.description,
         'title_en': requested_pokemon.title_en,
         'title_jp': requested_pokemon.title_jp,
-        "previous_evolution": previous_evolution_data
+        'previous_evolution': previous_evolution_data,
+        'next_evolution': next_evolution_data
     }
 
     current_time = timezone.localtime()
