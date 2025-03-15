@@ -64,13 +64,22 @@ def show_pokemon(request, pokemon_id):
     except Pokemon.DoesNotExist:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
     
+    previous_evolution_data = None
+    if requested_pokemon.previous_evolution:
+        previous_evolution_data = {
+            "title_ru": requested_pokemon.previous_evolution.title,
+            "pokemon_id": requested_pokemon.previous_evolution.id,
+            "img_url": requested_pokemon.previous_evolution.image.url if requested_pokemon.previous_evolution.image else DEFAULT_IMAGE_URL
+        }
+    
     pokemon_data = {
         'pokemon_id': requested_pokemon.id,
         'img_url': requested_pokemon.image.url if requested_pokemon.image else DEFAULT_IMAGE_URL,
         'title_ru': requested_pokemon.title,
         'description': requested_pokemon.description,
         'title_en': requested_pokemon.title_en,
-        'title_jp': requested_pokemon.title_jp
+        'title_jp': requested_pokemon.title_jp,
+        "previous_evolution": previous_evolution_data
     }
 
     current_time = timezone.localtime()
