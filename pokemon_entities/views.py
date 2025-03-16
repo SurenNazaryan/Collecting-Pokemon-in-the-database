@@ -38,17 +38,27 @@ def show_all_pokemons(request):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in pokemons_for_map:
         pokemon = pokemon_entity.pokemon
+        image_url = (
+            request.build_absolute_uri(pokemon.image.url)
+            if pokemon.image.url
+            else DEFAULT_IMAGE_URL
+        )
         add_pokemon(
             folium_map, pokemon_entity.lat,
             pokemon_entity.lon,
-            request.build_absolute_uri(pokemon.image.url) if pokemon.image.url else DEFAULT_IMAGE_URL
+            image_url
         )
 
     pokemons_on_page = []
     for pokemon in Pokemon.objects.all():
+        image_url = (
+            pokemon.image.url
+            if pokemon.image
+            else DEFAULT_IMAGE_URL
+        )
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
-            'img_url': pokemon.image.url if pokemon.image else DEFAULT_IMAGE_URL,
+            'img_url': image_url,
             'title_ru': pokemon.title,
         })
 
@@ -63,27 +73,41 @@ def show_pokemon(request, pokemon_id):
         requested_pokemon = Pokemon.objects.get(id=int(pokemon_id))
     except Pokemon.DoesNotExist:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
-    
+
     previous_evolution_data = None
     if requested_pokemon.previous_evolution:
+        img_url = (
+            requested_pokemon.previous_evolution.image.url
+            if requested_pokemon.previous_evolution.image
+            else DEFAULT_IMAGE_URL
+        )
         previous_evolution_data = {
             "title_ru": requested_pokemon.previous_evolution.title,
             "pokemon_id": requested_pokemon.previous_evolution.id,
-            "img_url": requested_pokemon.previous_evolution.image.url if requested_pokemon.previous_evolution.image else DEFAULT_IMAGE_URL
+            "img_url": img_url
         }
-    
+
     next_evolution_data = None
     if requested_pokemon.next_evolution.exists():
         next_evolution = requested_pokemon.next_evolution.first()
+        img_url = (
+            next_evolution.image.url
+            if next_evolution.image
+            else DEFAULT_IMAGE_URL
+        )
         next_evolution_data = {
             "title_ru": next_evolution.title,
             "pokemon_id": next_evolution.id,
-            "img_url": next_evolution.image.url if next_evolution.image else DEFAULT_IMAGE_URL
+            "img_url": img_url
         }
 
     pokemon_data = {
         'pokemon_id': requested_pokemon.id,
-        'img_url': requested_pokemon.image.url if requested_pokemon.image else DEFAULT_IMAGE_URL,
+        'img_url': (
+            requested_pokemon.image.url
+            if requested_pokemon.image
+            else DEFAULT_IMAGE_URL
+        ),
         'title_ru': requested_pokemon.title,
         'description': requested_pokemon.description,
         'title_en': requested_pokemon.title_en,
@@ -100,10 +124,15 @@ def show_pokemon(request, pokemon_id):
         )
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in pokemons_for_map:
+        image_url = (
+            request.build_absolute_uri(pokemon_entity.pokemon.image.url)
+            if pokemon_entity.pokemon.image.url
+            else DEFAULT_IMAGE_URL
+        )
         add_pokemon(
             folium_map, pokemon_entity.lat,
             pokemon_entity.lon,
-            request.build_absolute_uri(pokemon_entity.pokemon.image.url) if pokemon_entity.pokemon.image.url else DEFAULT_IMAGE_URL
+            image_url
         )
 
     return render(request, 'pokemon.html', context={
