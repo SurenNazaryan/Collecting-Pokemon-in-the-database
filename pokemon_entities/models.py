@@ -36,7 +36,7 @@ class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(
         Pokemon,
         on_delete=models.CASCADE,
-        null=True,
+        related_name='entity',
         verbose_name='Покемон'
         )
     lat = models.FloatField(null=True, blank=True, verbose_name='Широта')
@@ -50,15 +50,15 @@ class PokemonEntity(models.Model):
         null=True,
         blank=True,
         verbose_name='Исчезновение')
-    level = models.IntegerField(null=True, blank=True, verbose_name='Уровень')
-    health = models.IntegerField(
+    level = models.PositiveIntegerField(null=True, blank=True, verbose_name='Уровень')
+    health = models.PositiveIntegerField(
         null=True,
         blank=True,
         verbose_name='Здоровье'
         )
-    strength = models.IntegerField(null=True, blank=True, verbose_name='Сила')
-    defence = models.IntegerField(null=True, blank=True, verbose_name='Защита')
-    stamina = models.IntegerField(
+    strength = models.PositiveIntegerField(null=True, blank=True, verbose_name='Сила')
+    defence = models.PositiveIntegerField(null=True, blank=True, verbose_name='Защита')
+    stamina = models.PositiveIntegerField(
         null=True,
         blank=True,
         verbose_name='Выносливость'
