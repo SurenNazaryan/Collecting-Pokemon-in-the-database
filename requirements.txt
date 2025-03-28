@@ -3,3 +3,4 @@ python-dotenv==0.15.*
 folium==0.11.*
 setuptools==76.0.0
 pillow==11.1.0  # required by Windows environment
+legacy-cgi==2.6.3
