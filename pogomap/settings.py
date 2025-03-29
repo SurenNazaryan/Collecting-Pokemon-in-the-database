@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'REPLACE_ME')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['skyephirts.pythonanywhere.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
